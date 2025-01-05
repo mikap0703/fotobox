@@ -4,8 +4,19 @@ import { exec } from 'child_process';
 import { promisify } from 'util';
 import { v4 as uuidv4 } from 'uuid';
 import * as fs from 'fs';
+import { superValidate } from 'sveltekit-superforms';
+import { zod } from 'sveltekit-superforms/adapters';
+import { z } from 'zod';
 
 const execAsync = promisify(exec);
+
+const captureSchema = z.object({});
+
+export const load = async () => {
+	const form = await superValidate(zod(captureSchema));
+
+	return { form };
+}
 
 export const actions = {
 	default: async () => {
@@ -21,7 +32,7 @@ export const actions = {
 			console.error('Failed to take a picture:', error);
 			// Redirect to an error page or inform the user
 			// await new Promise(resolve => setTimeout(resolve, 1000))
-			throw redirect(303, '/capture/error');
+			throw redirect(303, '/capture/a');
 		}
 		// Check if the temp directory exists, create it if not
 		const tempPath = './temp';
