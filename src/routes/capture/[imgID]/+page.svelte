@@ -1,6 +1,7 @@
 <script lang="ts">
 	import QRCode from 'qrcode';
 	import { goto } from '$app/navigation';
+	import { CameraPhotoOutline, PrinterOutline } from 'flowbite-svelte-icons';
 
 	let maxCopies = 5;
 
@@ -38,14 +39,14 @@
 	</div>
 
 	<!-- QR Code and Actions Section -->
-	<div class="bg-gradient-to-b from-blue-500 to-blue-600 text-gray-50 lg:basis-1/3 h-full flex flex-col p-6 space-y-6">
+	<div class="bg-gradient-to-b from-blue-500 to-blue-600 rounded-l-2xl shadow-md text-gray-50 lg:basis-1/3 h-full flex flex-col p-6 space-y-16">
 		<!-- QR Code Section -->
-		<div class="flex-1 flex flex-col items-center justify-center text-center">
+		<div class="w-5/6 mx-auto flex-1 flex flex-col items-center justify-center text-center">
 			{#if qrCodeDataUrl}
 				<h1 class="font-bold text-3xl mb-4">QR Code</h1>
-				<img src={qrCodeDataUrl} alt="QR Code for UUID" class="w-64 h-64 mx-auto rounded-lg shadow-lg" />
-				<div class="text-left mt-6">
-					<h2 class="text-lg font-semibold mb-2">Anleitung</h2>
+				<img src={qrCodeDataUrl} alt="QR Code for UUID" class="w-1/2 h-auto mx-auto rounded-lg shadow-lg" />
+				<div class="text-left mt-6 font-bold">
+					<h2 class="text-lg underline mb-2">Anleitung:</h2>
 					<ul class="space-y-1 text-base">
 						<li>1. Mit dem WLAN der Fotobox verbinden</li>
 						<li>2. QR Code scannen</li>
@@ -57,33 +58,49 @@
 			{/if}
 		</div>
 
+		<div class="bg-white w-64 h-2 mx-auto rounded-lg"></div>
+
 		<!-- Checkbox-like Buttons Section -->
-		<h1 class="font-bold text-2xl">Anzahl der Kopien</h1>
-		<div class="flex flex-wrap justify-center gap-3">
-			{#each Array.from({ length: maxCopies }, (_, i) => i + 1) as num}
-				<button
-					on:click={() => {selectedCopies = num}}
-					class="font-bold py-3 px-6 rounded-lg shadow-md transition flex items-center justify-center w-20 h-16 text-xl"
-					class:bg-gray-50={selectedCopies !== num}
-					class:text-blue-600={selectedCopies !== num}
-					class:bg-green-600={selectedCopies === num}
-					class:text-gray-50={selectedCopies === num}
+		<div class="w-5/6 mx-auto">
+			<!-- Print stuff -->
+			<div>
+				<h1 class="font-bold text-2xl mb-3">Anzahl der Kopien:</h1>
+				<div class="grid grid-cols-5 justify-items-stretch gap-3 w-full">
+					{#each Array.from({ length: maxCopies }, (_, i) => i + 1) as num}
+						<button
+							on:click={() => {selectedCopies = num}}
+							class="font-bold py-3 px-6 rounded-lg shadow-md transition flex items-center justify-center w-full h-16 text-xl"
+							class:bg-gray-50={selectedCopies !== num}
+							class:text-blue-600={selectedCopies !== num}
+							class:bg-green-600={selectedCopies === num}
+							class:text-gray-50={selectedCopies === num}
+						>
+							{num}
+						</button>
+					{/each}
+				</div>
+
+				<!-- Print Button -->
+				<div class="flex justify-center mt-6">
+					<button
+						class="bg-gray-50 text-blue-600 font-bold py-3 px-4 rounded-lg shadow-md hover:bg-gray-100 transition flex items-center"
+						on:click={navigateToPrint}
+					>
+						<PrinterOutline class="w-8 h-8 mr-2" /> Drucken
+					</button>
+				</div>
+			</div>
+
+			<!-- Back Button -->
+			<div class="flex float-right mt-20">
+				<a
+					class="bg-gray-50 text-blue-600 font-bold py-3 px-6 rounded-lg shadow-md hover:bg-gray-100 transition flex items-center"
+					href="/capture"
 				>
-					{num}
-				</button>
-			{/each}
-		</div>
-
-
-
-		<!-- Print Button -->
-		<div class="flex justify-center">
-			<button
-				class="bg-gray-50 text-blue-600 font-bold py-3 px-6 rounded-lg shadow-md hover:bg-gray-100 transition"
-				on:click={navigateToPrint}
-			>
-				Drucken
-			</button>
+					<CameraPhotoOutline class="w-8 h-8 mr-2" />
+					Nächstes Bild
+				</a>
+			</div>
 		</div>
 	</div>
 </div>

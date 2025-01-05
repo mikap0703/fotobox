@@ -20,6 +20,7 @@ export const actions = {
 		} catch (error) {
 			console.error('Failed to take a picture:', error);
 			// Redirect to an error page or inform the user
+			// await new Promise(resolve => setTimeout(resolve, 1000))
 			throw redirect(303, '/capture/error');
 		}
 		// Check if the temp directory exists, create it if not

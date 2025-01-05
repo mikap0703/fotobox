@@ -21,6 +21,7 @@
 		"eslint": "^9.7.0",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-svelte": "^2.36.0",
+		"flowbite-svelte-icons": "^1.6.2",
 		"globals": "^15.0.0",
 		"prettier": "^3.3.2",
 		"prettier-plugin-svelte": "^3.2.6",
@@ -33,6 +34,7 @@
 		"vite": "^5.4.11"
 	},
 	"dependencies": {
+		"@fontsource-variable/sora": "^5.1.1",
 		"@sveltejs/adapter-node": "^5.2.11",
 		"@types/node": "^22.10.5",
 		"@types/qrcode": "^1.5.5",
