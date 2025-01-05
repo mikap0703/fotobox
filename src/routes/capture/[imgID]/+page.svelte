@@ -1,10 +1,8 @@
 <script lang="ts">
 	import QRCode from 'qrcode';
-	import { goto } from '$app/navigation';
 	import { CameraPhotoOutline, PrinterOutline } from 'flowbite-svelte-icons';
-
-	let maxCopies = 5;
-
+	import { superForm } from 'sveltekit-superforms';
+	import toast from 'svelte-french-toast';
 
 	export let data;
 
@@ -12,6 +10,33 @@
 
 	let qrCodeDataUrl = '';
 	let selectedCopies: number = 1; // Default selected number of copies
+	let maxCopies = 5;
+
+	const { enhance } = superForm(data.form, {
+		delayMs: 500,
+		timeoutMs: 8000,
+		onSubmit: async ({formData}) => {
+			formData.append('numCopies', selectedCopies.toString());
+		},
+		onResult: async ({result}) => {
+			if (result.data.success) {
+				if (selectedCopies > 1) {
+					toast.success("Die Bilder werden gedruckt...", {
+						duration: 5000,
+					})
+				} else {
+					toast.success("Das Bild wird gedruckt...", {
+						duration: 5000,
+					})
+				}
+			}
+			else {
+				toast.error("Beim Drucken ist ein Fehler aufgetreten...", {
+					duration: 5000,
+				})
+			}
+		}
+	})
 
 	// Generate the QR code as a Data URL
 	QRCode.toDataURL(`https://fotobox.mpe-home.ipv64.net/capture/${uuid}`)
@@ -21,11 +46,6 @@
 		.catch((err: Error) => {
 			console.error('Error generating QR Code:', err);
 		});
-
-	// Navigate to print route
-	function navigateToPrint(): void {
-		goto(`/print?copies=${selectedCopies}`);
-	}
 </script>
 
 <div class="h-screen w-screen bg-gray-50 flex flex-col lg:flex-row">
@@ -82,12 +102,14 @@
 
 				<!-- Print Button -->
 				<div class="flex justify-center mt-6">
-					<button
-						class="bg-gray-50 text-blue-600 font-bold py-3 px-4 rounded-lg shadow-md hover:bg-gray-100 transition flex items-center"
-						on:click={navigateToPrint}
-					>
-						<PrinterOutline class="w-8 h-8 mr-2" /> Drucken
-					</button>
+					<form method="POST" action="?/print" use:enhance>
+						<button
+							class="bg-gray-50 text-blue-600 font-bold py-3 px-4 rounded-lg shadow-md hover:bg-gray-100 transition flex items-center"
+							type="submit"
+						>
+							<PrinterOutline class="w-8 h-8 mr-2" /> Drucken
+						</button>
+					</form>
 				</div>
 			</div>
 
