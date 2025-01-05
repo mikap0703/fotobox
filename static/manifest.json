@@ -1,0 +1,18 @@
+
+{
+  "name": "Fotobox",
+  "description": "Fotobox",
+  "short_name": "Fotobox",
+  "display": "standalone",
+  "start_url": "/",
+  "background_color": "#2463EB",
+  "theme_color": "#2463EB",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
