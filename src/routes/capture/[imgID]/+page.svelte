@@ -3,6 +3,7 @@
 	import { CameraPhotoOutline, PrinterOutline } from 'flowbite-svelte-icons';
 	import { superForm } from 'sveltekit-superforms';
 	import toast from 'svelte-french-toast';
+	import Confetti from 'svelte-confetti';
 
 	export let data;
 
@@ -11,6 +12,7 @@
 	let qrCodeDataUrl = '';
 	let selectedCopies: number = 1; // Default selected number of copies
 	let maxCopies = 5;
+	const confetti = true
 
 	const { enhance } = superForm(data.form, {
 		delayMs: 500,
@@ -48,13 +50,29 @@
 		});
 </script>
 
-<div class="h-screen w-screen bg-gray-50 flex flex-col lg:flex-row">
+{#if confetti}
+	<div style="
+	 z-index: 1;
+	 position: fixed;
+	 top: -50px;
+	 left: 0;
+	 height: 100vh;
+	 width: 66vw;
+	 display: flex;
+	 justify-content: center;
+	 overflow: hidden;
+	 pointer-events: none;">
+		<Confetti x={[-5, 5]} y={[0, 0.1]} delay={[0, 2000]} duration=2000 amount=500 fallDistance="70vh" />
+	</div>
+{/if}
+
+<div class="h-screen w-screen flex flex-col lg:flex-row">
 	<!-- Image Section -->
-	<div class="h-full lg:basis-2/3 flex flex-col items-center justify-center p-6">
+	<div class="h-full lg:basis-2/3 flex flex-col items-center justify-center">
 		<img
 			src={base64}
 			alt="capture"
-			class="w-5/6 h-auto object-cover border rounded-lg shadow-md"
+			class="w-5/6 h-auto object-cover border rounded-lg shadow-md z-20"
 		/>
 	</div>
 
