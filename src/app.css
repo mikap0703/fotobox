@@ -9,4 +9,10 @@
 html,
 body {
     overflow: hidden;
+    background-color: rgb(249 250 251 / var(--tw-bg-opacity, 1)) /* #f9fafb */;
+}
+
+/* Enable scrolling only for the page with form */
+.page-with-form {
+    overflow: auto; /* Enable scrolling for this page */
 }
