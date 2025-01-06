@@ -1,4 +1,4 @@
-import type { Actions } from './$types';
+import type { Actions } from '../../../../.svelte-kit/types/src/routes';
 import { redirect } from '@sveltejs/kit';
 import { exec } from 'child_process';
 import { promisify } from 'util';
