@@ -5,3 +5,8 @@
 * {
     font-family: 'Sora Variable', sans-serif;
 }
+
+html,
+body {
+    overflow: hidden;
+}

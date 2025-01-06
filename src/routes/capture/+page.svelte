@@ -27,11 +27,11 @@
 	});
 </script>
 
-<div class="h-screen w-screen bg-blue-600 flex flex-col items-center">
-	<div class="relative w-full h-full flex items-center justify-center">
+<div class="h-screen w-screen bg-blue-600 flex flex-col">
+	<div class="relative w-full basis-3/4 flex items-center justify-center">
 		{#if stream}
 			<!-- Video Container -->
-			<video class="absolute h-5/6 my-auto rounded-lg object-cover" autoplay muted>
+			<video class="absolute h-5/6 my-auto rounded-2xl object-cover" autoplay muted>
 				<source src={streamURL} type="video/mp4" />
 				<track kind="captions" />
 				Your browser does not support the video tag.
@@ -46,13 +46,13 @@
 		</div>
 	</div>
 
-	<div class="w-full h-full flex items-center">
+	<div class="w-full basis-1/4 flex items-center">
 		<form method="POST" use:enhance class="mx-auto">
 			<button
 				type="submit"
-				class="bg-gray-50 py-32 px-64 rounded-2xl text-7xl font-bold shadow-lg hover:scale-105 duration-200 flex items-center"
+				class="bg-gray-50 rounded-2xl text-5xl p-8 font-bold shadow-lg hover:scale-105 duration-200 flex items-center"
 			>
-				<CameraPhotoOutline class="w-32 h-32 mr-6" />
+				<CameraPhotoOutline class="w-16 mr-6" />
 				Foto aufnehmen
 			</button>
 		</form>

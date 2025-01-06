@@ -3,17 +3,17 @@
 		<h1 class="text-white font-bold text-9xl">Fotobox</h1>
 	</div>
 
-	<div class="w-full h-full flex items-center justify-evenly">
+	<div class="w-full h-3/4 grid grid-cols-2 gap-16 p-16 pb-32 items-center justify-evenly">
 		<a
 			href="/capture"
-			class="bg-gray-50 h-64 px-16 rounded-2xl text-7xl font-bold shadow-lg hover:scale-105 duration-200 flex items-center justify-center"
+			class="bg-gray-50 h-full rounded-2xl text-4xl font-bold shadow-lg hover:scale-105 duration-200 flex items-center justify-center"
 		>
 			Fotos aufnehmen
 		</a>
 
 		<a
 			href="/settings"
-			class="bg-gray-50 h-64 px-16 rounded-2xl text-7xl font-bold shadow-lg hover:scale-105 duration-200 flex items-center justify-center"
+			class="bg-gray-50 h-full rounded-2xl text-4xl font-bold shadow-lg hover:scale-105 duration-200 flex items-center justify-center"
 		>
 			Einstellungen
 		</a>
