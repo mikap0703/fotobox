@@ -44,6 +44,7 @@
 		"express": "^4.21.2",
 		"node-cups": "^1.2.3",
 		"qrcode": "^1.5.4",
+		"sharp": "^0.34.2",
 		"svelte-french-toast": "^1.2.0",
 		"uuid": "^11.0.3"
 	}
