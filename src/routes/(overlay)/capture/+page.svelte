@@ -126,46 +126,62 @@
 
 <canvas bind:this={canvasElement} class="hidden"></canvas>
 
-<div class="h-screen w-screen bg-blue-600 flex flex-col">
-	<div class="relative w-full basis-3/4 flex items-center justify-center">
-		{#if stream}
-			<!-- Video Container -->
-			<video class="absolute h-5/6 my-auto rounded-2xl object-cover" autoplay muted>
-				<source src={streamURL} type="video/mp4" />
-				<track kind="captions" />
-				Your browser does not support the video tag.
-			</video>
-		{/if}
+<div class="h-screen w-screen bg-gradient-to-br from-blue-700 via-blue-600 to-blue-800 flex flex-col">
+	<div class="relative w-full basis-3/4 flex items-center justify-center p-4 lg:p-8">
+		<!-- Decorative background elements -->
+		<div class="absolute top-10 left-10 w-20 h-20 bg-blue-200 rounded-full opacity-40 animate-pulse"></div>
+		<div class="absolute bottom-20 right-10 w-16 h-16 bg-blue-300 rounded-full opacity-40 animate-pulse delay-1000"></div>
 
-		{#if webcam}
-			<!-- Webcam Container with enforced 15:10 (3:2) aspect ratio -->
-			<div class="relative h-5/6 max-w-5/6 max-w-[90%] aspect-[3/2] my-8 mx-auto overflow-hidden rounded-2xl flex items-center justify-center bg-black">
-				<video
-					bind:this={webcamVideoElement}
-					class="absolute top-0 left-0 w-full h-full object-cover"
-					autoplay
-					muted
-					playsinline
-				></video>
+		<!-- Media Display (Stream or Webcam) -->
+		<div class="relative w-full max-w-5xl aspect-[3/2] my-8 transform group">
+			<div class="absolute inset-0 rounded-2xl blur-lg bg-gradient-to-br from-blue-400 to-purple-400 opacity-25 group-hover:opacity-40 transition-opacity duration-500"></div>
+			<div class="relative w-full h-full rounded-2xl overflow-hidden border-8 border-white shadow-2xl z-20 bg-black">
+				{#if stream}
+					<video
+						class="w-full h-full object-cover"
+						autoplay
+						muted
+					>
+						<source src={streamURL} type="video/mp4" />
+						<track kind="captions" />
+						Your browser does not support the video tag.
+					</video>
+				{:else if webcam}
+					<video
+						bind:this={webcamVideoElement}
+						class="w-full h-full object-cover"
+						autoplay
+						muted
+						playsinline
+					></video>
+				{/if}
+				<!-- Overlay positioned on top of the video with higher z-index -->
+				<img src={data.overlay} alt="" class="absolute inset-0 w-full h-full object-cover z-30">
 			</div>
-		{/if}
+			<!-- Decorative corners -->
+			<div class="absolute -top-3 -left-3 w-12 h-12 border-t-4 border-l-4 border-blue-500 rounded-tl-lg opacity-75"></div>
+			<div class="absolute -bottom-3 -right-3 w-12 h-12 border-b-4 border-r-4 border-blue-500 rounded-br-lg opacity-75"></div>
+		</div>
 
 		<!-- Countdown -->
-		<div class="absolute text-white text-center font-bold text-9xl drop-shadow-2xl">
-			{#if currentCountdown > 0}
+		{#if currentCountdown > 0}
+			<div class="absolute text-white text-center font-bold text-9xl drop-shadow-2xl z-40">
 				<p>{currentCountdown}</p>
-			{/if}
-		</div>
+			</div>
+		{/if}
 	</div>
 
-	<div class="w-full basis-1/4 flex flex-col items-center">
-		<form method="POST" use:enhance enctype="multipart/form-data" class="mx-auto">
+
+	<div class="w-full basis-1/4 flex flex-col items-center justify-center">
+		<form method="POST" use:enhance enctype="multipart/form-data" class="mx-auto w-full max-w-md px-4">
 			<button
 				type="submit"
-				class="bg-gray-50 rounded-2xl text-5xl p-8 font-bold shadow-lg hover:scale-105 duration-200 flex items-center"
+				class="w-full bg-gradient-to-r from-white to-blue-100 text-blue-700 font-semibold py-4 px-6 rounded-xl shadow-xl hover:shadow-2xl active:bg-blue-100 transition-all duration-300 flex items-center justify-center text-lg sm:text-xl hover:scale-105 border-2 border-white/50 group"
 			>
-				<CameraPhotoOutline class="w-16 mr-6" />
-				Foto aufnehmen
+			<span class="bg-blue-600 text-white p-2 rounded-lg mr-3 group-hover:bg-blue-700 transition-colors duration-300">
+				<CameraPhotoOutline class="w-6 h-6" />
+			</span>
+				<span>Foto aufnehmen</span>
 			</button>
 		</form>
 	</div>

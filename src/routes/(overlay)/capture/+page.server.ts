@@ -17,7 +17,10 @@ const captureSchema = z.object({
 export const load = async () => {
 	const form = await superValidate(zod(captureSchema));
 
-	return { form };
+	const overlayBuffer = await sharp('files/overlay.png').toBuffer();
+	const overlayDataURI = `data:image/png;base64,${overlayBuffer.toString('base64')}`;
+
+	return { form, overlay: overlayDataURI };
 }
 
 export const actions = {
@@ -67,7 +70,7 @@ export const actions = {
 			const left = Math.floor((width - newWidth) / 2);
 			const top = Math.floor((height - newHeight) / 2);
 
-			const overlay = await sharp('overlay.png')
+			const overlay = await sharp('files/overlay.png')
 				.resize(newWidth, newHeight, { fit: 'inside' }) // Ensure it fits within
 				.toBuffer();
 
