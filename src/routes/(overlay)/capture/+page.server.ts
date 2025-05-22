@@ -48,7 +48,7 @@ export const actions = {
 			// Convert to a Buffer
 			const imageBuffer = Buffer.from(base64Image, 'base64');
 
-// Load the image and crop it to 3:2 aspect ratio
+			// Load the image and crop it to 3:2 aspect ratio
 			const image = sharp(imageBuffer);
 			const metadata = await image.metadata();
 
@@ -60,13 +60,13 @@ export const actions = {
 			let newWidth = width;
 			let newHeight = Math.round(width / targetAspect);
 
-// If height is too small for 3:2, adjust width instead
+			// If height is too small for 3:2, adjust width instead
 			if (newHeight > height) {
 				newHeight = height;
 				newWidth = Math.round(height * targetAspect);
 			}
 
-// Center crop coordinates
+			// Center crop coordinates
 			const left = Math.floor((width - newWidth) / 2);
 			const top = Math.floor((height - newHeight) / 2);
 

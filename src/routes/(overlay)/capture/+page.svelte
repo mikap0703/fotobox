@@ -1,13 +1,18 @@
-<script>
+<script lang="ts">
 	import { CameraPhotoOutline } from 'flowbite-svelte-icons';
 	import { superForm } from 'sveltekit-superforms';
-	import { onMount, onDestroy } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 
 	let { data } = $props();
 
 	// config
 	const countdown = 3; // Initial countdown value
+	const streamURL = "https://tekeye.uk/html/images/Joren_Falls_Izu_Jap.mp4";
+	const stream = false;
+	const webcam = true;
+	const webcamName = "MX Brio"
 
+	// form stuff
 	const { form, submit, enhance } = superForm(data.form, {
 		dataType: 'json',
 		onSubmit: async () => {
@@ -16,16 +21,13 @@
 			currentCountdown = countdown;
 
 			while (currentCountdown > 0) {
-				await new Promise(resolve => setTimeout(resolve, 1100)); // Wait for 1 second
+				await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 1 second
 				currentCountdown--; // Update displayed countdown;
 			}
 
 			takeScreenshot();
-
 			currentCountdown = 0; // Reset countdown
-			console.log('Submitting...');
-			console.log($form)
-			// cancel()
+
 			submit(); // Submit the form
 		}
 	});
@@ -33,13 +35,10 @@
 	// countdown
 	let currentCountdown = $state(0); // For showing countdown dynamically
 
-	// stream
-	const streamURL = "https://tekeye.uk/html/images/Joren_Falls_Izu_Jap.mp4";
-	const stream = false;
-
 	// webcam
-	let webcamVideoElement;
-	let webcamStream;
+	// eslint-disable-next-line svelte/valid-compile
+	let webcamVideoElement: null | HTMLVideoElement = null;
+	let webcamStream: null | MediaStream = null;
 
 	// First, get the list of all available video devices
 	async function getVideoDevices() {
@@ -48,7 +47,7 @@
 	}
 
 	// Then, select a specific camera by its label or deviceId
-	async function getSpecificCamera(preferredLabel) {
+	async function getSpecificCamera(preferredLabel: string) {
 		const videoDevices = await getVideoDevices();
 
 		console.log("Available video devices:");
@@ -62,21 +61,19 @@
 		) || videoDevices[0];
 
 		// Use the selected device
-		const webcamStream = await navigator.mediaDevices.getUserMedia({
+		return await navigator.mediaDevices.getUserMedia({
 			video: {
-				// deviceId: { exact: selectedDevice.deviceId },
+				deviceId: { exact: selectedDevice.deviceId },
 				width: { ideal: 1920 * 2 },      // 4K horizontal resolution
-				height: { ideal: 1000 * 2},     // 4K vertical resolution
+				height: { ideal: 1000 * 2 },     // 4K vertical resolution
 			}
 		});
-
-		return webcamStream;
 	}
 
 	onMount(async () => {
-		if (webcam && navigator.mediaDevices?.getUserMedia) {
+		if (webcam) {
 			try {
-				webcamStream = await getSpecificCamera('MacBook Pro Camera');
+				webcamStream = await getSpecificCamera(webcamName);
 
 				if (webcamVideoElement) {
 					webcamVideoElement.srcObject = webcamStream;
@@ -87,22 +84,15 @@
 		}
 	});
 
-	// Stop webcam when component unmounts
-	function stopWebcam() {
+	// Clean up on component unmount
+	onDestroy(() => {
+		// Stop webcam when component unmounts
 		if (webcamStream) {
 			webcamStream.getTracks().forEach(track => track.stop());
 		}
-	}
-
-	// Clean up on component unmount
-	onDestroy(() => {
-		stopWebcam();
 	});
 
-	let image = $state(null);
-	const webcam = true;
-
-	let canvasElement;
+	let canvasElement: null | HTMLCanvasElement = null;
 
 	function takeScreenshot() {
 		console.log('Taking screenshot...');
@@ -115,6 +105,12 @@
 		canvasElement.height = height;
 
 		const context = canvasElement.getContext('2d');
+
+		if (!context) {
+			console.error('Failed to get canvas context');
+			return;
+		}
+
 		context.drawImage(webcamVideoElement, 0, 0, width, height);
 
 		// This gives you a base64 image URL (you can upload it, send to server, etc.)
@@ -143,8 +139,6 @@
 						muted
 					>
 						<source src={streamURL} type="video/mp4" />
-						<track kind="captions" />
-						Your browser does not support the video tag.
 					</video>
 				{:else if webcam}
 					<video
