@@ -10,7 +10,7 @@
 	const streamURL = "https://tekeye.uk/html/images/Joren_Falls_Izu_Jap.mp4";
 	const stream = false;
 	const webcam = true;
-	const webcamName = "MX Brio"
+	const webcamName = "OBS Virtual Camera"
 
 	// form stuff
 	const { form, submit, enhance } = superForm(data.form, {
@@ -42,6 +42,10 @@
 
 	// First, get the list of all available video devices
 	async function getVideoDevices() {
+		if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+			throw new Error('Media devices API not supported');
+		}
+		await navigator.mediaDevices.getUserMedia({ video: true })
 		const devices = await navigator.mediaDevices.enumerateDevices();
 		return devices.filter(device => device.kind === 'videoinput');
 	}

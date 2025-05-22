@@ -5,7 +5,7 @@
 	let { children } = $props();
 </script>
 
-<div class="bg-gray-50 h-screen w-screen">
+<div class="bg-gray-50 min-h-screen min-w-screen">
 	<Toaster />
 
 	{@render children()}
