@@ -50,7 +50,7 @@ export const defaultConfig: AppConfig = {
 	printing: {
 		enabled: true,
 		maxCopies: 5,
-		printerName: "Canon_SELPHY_CP1500"
+		printerName: "PDFwriter"
 	},
 
 	ui: {
