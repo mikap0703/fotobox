@@ -5,17 +5,17 @@
 	import toast from 'svelte-french-toast';
 	import Confetti from 'svelte-confetti';
 
-	export let data;
+	let { data } = $props();
 
-	let { uuid, base64 } = data; // $props();
+	let { uuid, base64 } = data;
 
 	// config
 	const allowPrinting = true; // Flag to control printing
-	const maxCopies = 1; // Maximum allowed copies
+	const maxCopies = 5; // Maximum allowed copies
 	const confetti = true;
 
-	let qrCodeDataUrl = '';
-	let selectedCopies: number = 1; // Default selected number of copies
+	let qrCodeDataUrl = $state('');
+	let selectedCopies: number = $state(1); // Default selected number of copies
 
 	const { enhance } = superForm(data.form, {
 		delayMs: 500,
@@ -127,11 +127,11 @@
 			<div class="w-full mb-8 relative z-10">
 				{#if maxCopies > 1}
 					<h2 class="font-bold text-2xl mb-5 text-white">Anzahl der Kopien:</h2>
-					<div class="grid grid-cols-{maxCopies} gap-4 w-full">
+					<div class="flex flex-row justify-between grid-cols-{maxCopies} gap-4 w-full">
 						{#each Array.from({ length: maxCopies }, (_, i) => i + 1) as num}
 							<button
-								on:click={() => {selectedCopies = num}}
-								class="font-bold py-4 px-5 rounded-xl shadow-xl transition-all duration-300 flex items-center justify-center h-18 text-xl"
+								onclick={() => {selectedCopies = num}}
+								class="font-bold py-4 px-5 w-full rounded-xl shadow-xl transition-all duration-300 flex items-center justify-center h-18 text-xl"
 								class:bg-white={selectedCopies !== num}
 								class:text-blue-700={selectedCopies !== num}
 								class:bg-gradient-to-r={selectedCopies === num}

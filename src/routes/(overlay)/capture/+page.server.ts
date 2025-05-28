@@ -8,6 +8,9 @@ import { zod } from 'sveltekit-superforms/adapters';
 import { z } from 'zod';
 import sharp from 'sharp';
 
+const overlayPath = 'files/overlay-marius.png';
+const doOverlay = false;
+
 const execAsync = promisify(exec);
 
 const captureSchema = z.object({
@@ -17,10 +20,13 @@ const captureSchema = z.object({
 export const load = async () => {
 	const form = await superValidate(zod(captureSchema));
 
-	const overlayBuffer = await sharp('files/overlay.png').toBuffer();
-	const overlayDataURI = `data:image/png;base64,${overlayBuffer.toString('base64')}`;
+	let overlay = null;
+	if (doOverlay) {
+		const overlayBuffer = await sharp(overlayPath).toBuffer();
+		overlay = `data:image/png;base64,${overlayBuffer.toString('base64')}`;
+	}
 
-	return { form, overlay: overlayDataURI };
+	return { form, overlay };
 }
 
 export const actions = {
@@ -70,14 +76,20 @@ export const actions = {
 			const left = Math.floor((width - newWidth) / 2);
 			const top = Math.floor((height - newHeight) / 2);
 
-			const overlay = await sharp('files/overlay.png')
-				.resize(newWidth, newHeight, { fit: 'inside' }) // Ensure it fits within
-				.toBuffer();
+			if (doOverlay) {
+				const overlay = await sharp(overlayPath)
+					.resize(newWidth, newHeight, { fit: 'inside' }) // Ensure it fits within
+					.toBuffer();
 
-			await image
-				.extract({ left, top, width: newWidth, height: newHeight })
-				.composite([{ input: overlay, gravity: 'southeast' }])
-				.toFile(`temp/${uuid}.jpg`);
+				await image
+					.extract({ left, top, width: newWidth, height: newHeight })
+					.composite([{ input: overlay, gravity: 'southeast' }])
+					.toFile(`temp/${uuid}.jpg`);
+			} else {
+				await image
+					.extract({ left, top, width: newWidth, height: newHeight })
+					.toFile(`temp/${uuid}.jpg`);
+			}
 		} else {
 			try {
 				// Command to take a picture with gphoto2 and save it to /temp

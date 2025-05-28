@@ -13,7 +13,7 @@ const printSchema = z.object({
 	numCopies: z.number()
 })
 
-const printer = "PDFwriter";
+const printer = "Canon_SELPHY_CP1500";
 
 export const load = async ({ params }) => {
 	const form = await superValidate(zod(printSchema));

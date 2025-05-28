@@ -10,7 +10,7 @@
 	const streamURL = "https://tekeye.uk/html/images/Joren_Falls_Izu_Jap.mp4";
 	const stream = false;
 	const webcam = true;
-	const webcamName = "OBS Virtual Camera"
+	const webcamName = "MX Brio"
 
 	// form stuff
 	const { form, submit, enhance } = superForm(data.form, {
@@ -75,6 +75,7 @@
 	}
 
 	onMount(async () => {
+		await navigator.mediaDevices.getUserMedia({ video: true })
 		if (webcam) {
 			try {
 				webcamStream = await getSpecificCamera(webcamName);
@@ -99,7 +100,6 @@
 	let canvasElement: null | HTMLCanvasElement = null;
 
 	function takeScreenshot() {
-		console.log('Taking screenshot...');
 		if (!webcamVideoElement || !canvasElement) return;
 
 		const width = webcamVideoElement.videoWidth;
@@ -115,12 +115,12 @@
 			return;
 		}
 
-		context.drawImage(webcamVideoElement, 0, 0, width, height);
+		// Flip the canvas context horizontally before drawing
+		context.scale(-1, 1);
+		context.drawImage(webcamVideoElement, -width, 0, width, height);
 
 		// This gives you a base64 image URL (you can upload it, send to server, etc.)
-		const imageDataURL = canvasElement.toDataURL('image/png');
-		console.log('Screenshot taken:', imageDataURL);
-		$form.image = imageDataURL; // Store the image data URL
+		$form.image = canvasElement.toDataURL('image/png'); // Store the image data URL
 	}
 </script>
 
@@ -147,14 +147,16 @@
 				{:else if webcam}
 					<video
 						bind:this={webcamVideoElement}
-						class="w-full h-full object-cover"
+						class="w-full h-full object-cover transform scale-x-[-1]"
 						autoplay
 						muted
 						playsinline
 					></video>
 				{/if}
 				<!-- Overlay positioned on top of the video with higher z-index -->
-				<img src={data.overlay} alt="" class="absolute inset-0 w-full h-full object-cover z-30">
+				{#if data.overlay}
+					<img src={data.overlay} alt="" class="absolute inset-0 w-full h-full object-cover z-30">
+				{/if}
 			</div>
 			<!-- Decorative corners -->
 			<div class="absolute -top-3 -left-3 w-12 h-12 border-t-4 border-l-4 border-blue-500 rounded-tl-lg opacity-75"></div>
